@@ -29,9 +29,12 @@ public class Player {
      * добавление игры игроку
      * если игра уже была, никаких изменений происходить не должно
      */
-    public void installGame(Game game) {
+    public Game installGame(Game game) {
         if (!playedTime.containsKey(game)) {
             playedTime.put(game, 0);
+            return game;
+        } else {
+            return null;
         }
     }
 
