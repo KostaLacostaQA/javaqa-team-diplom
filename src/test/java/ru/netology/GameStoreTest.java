@@ -15,6 +15,17 @@ public class GameStoreTest {
         assertTrue(store.containsGame(game));
     }
 
+    @Test
+    public void containsGameTest() {
+
+        GameStore store1 = new GameStore();
+        GameStore store2 = new GameStore();
+        Game game1 = store1.publishGame("Нетология Баттл Онлайн", "Аркады");
+        Game game2 = store2.publishGame("Нетология Баттл Онлайн 2", "Аркады");
+
+        assertTrue(store1.containsGame(game1));
+        assertTrue(!store1.containsGame(game2));
+    }
 
     @Test
     public void publishGameTest() {
