@@ -4,8 +4,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Map;
+
 public class GameStoreTest {
 
+    //добавление игры в каталог (первоначальный тест)
     @Test
     public void shouldAddGame() {
 
@@ -15,6 +18,7 @@ public class GameStoreTest {
         assertTrue(store.containsGame(game));
     }
 
+    //проверка игра в каталоге или нет
     @Test
     public void containsGameTest() {
 
@@ -23,16 +27,20 @@ public class GameStoreTest {
         Game game1 = store1.publishGame("Нетология Баттл Онлайн", "Аркады");
         Game game2 = store2.publishGame("Нетология Баттл Онлайн 2", "Аркады");
 
+        //игра есть в первом каталоге
         assertTrue(store1.containsGame(game1));
+
+        //игры нет в первом каталоге
         assertTrue(!store1.containsGame(game2));
     }
 
+    //добавление игры в каталог
     @Test
     public void publishGameTest() {
         GameStore store = new GameStore();
+        //игры еще нет в каталоге
         Game expectedGame = new Game("Нетология Баттл Онлайн", "Аркады", store);
         Game actualGame = store.publishGame("Нетология Баттл Онлайн", "Аркады");
-
         assertEquals(expectedGame, actualGame);
 
         //дублирование игры
@@ -41,21 +49,36 @@ public class GameStoreTest {
         assertEquals(expectedGame, actualGame);
     }
 
-    //отсутствует метод для возврата времени игрока, невозможно выполнить тест
+    //добавление времени игроку
     @Test
     public void addPlayTimeTest() {
         GameStore store = new GameStore();
         //новый игрок
         store.addPlayTime("Константин", 10);
+        Map<String, Integer> playedTime = store.getPlayedTime();
+        int expectedHours = 10;
+        int actualHours = playedTime.get("Константин");
+        assertEquals(expectedHours, actualHours);
 
-        //игрок есть в базе данных
+        //игрок уже есть в базе данных
         store.addPlayTime("Константин", 5);
+        expectedHours = 15;
+        actualHours = playedTime.get("Константин");
+        assertEquals(expectedHours, actualHours);
 
         //недопустимость отрицательных часов и 0
-        store.addPlayTime("Константин", -5);
+        store.addPlayTime("Константин", -1);
+        expectedHours = 15;
+        actualHours = playedTime.get("Константин");
+        assertEquals(expectedHours, actualHours);
+
+        expectedHours = 15;
+        actualHours = playedTime.get("Константин");
+        assertEquals(expectedHours, actualHours);
         store.addPlayTime("Константин", 0);
     }
 
+    //вывод имени игрока с наибольшим игровым временем
     @Test
     public void getMostPlayerTest() {
         GameStore store = new GameStore();
@@ -70,6 +93,7 @@ public class GameStoreTest {
         assertEquals(expectedPlayer, store.getMostPlayer());
     }
 
+    //вывод суммарного времени игроков
     @Test
     public void getSumPlayedTimeTest() {
         GameStore store = new GameStore();
