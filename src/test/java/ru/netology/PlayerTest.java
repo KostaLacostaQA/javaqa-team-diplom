@@ -136,13 +136,13 @@ public class PlayerTest {
         // Отрицательные значения
 
         actualHours = player.play(game, -1);
-        expectedHours = 10;
+        expectedHours = -1;
         assertEquals(expectedHours, actualHours);
 
         // Значение 0
 
         actualHours = player.play(game, 0);
-        expectedHours = 10;
+        expectedHours = -1;
         assertEquals(expectedHours, actualHours);
     }
 }
