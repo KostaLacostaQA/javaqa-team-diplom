@@ -8,6 +8,10 @@ import java.util.Map;
 public class GameStore {
     private List<Game> games = new ArrayList<>();
 
+    public List<Game> getGames() {
+        return games;
+    }
+
     /**
      * Информация о том, какой игрок сколько играл в игры этого каталога
      * Ключ - имя игрока
@@ -15,23 +19,33 @@ public class GameStore {
      */
     private Map<String, Integer> playedTime = new HashMap<>();
 
+    public Map<String, Integer> getPlayedTime() {
+        return playedTime;
+    }
+
     /**
      * Создание объекта игры с заданными заголовком и жанром
      * Каждый объект игры помнит объект каталога, которому она принадлежит
      */
     public Game publishGame(String title, String genre) {
         Game game = new Game(title, genre, this);
-        games.add(game);
-        return game;
+        {
+            if (!games.contains(game)) {
+                games.add(game);
+                return game;
+            }
+        }
+        return null;
     }
+
 
     /**
      * Проверяет наличие игры в каталоге и возврашает true
      * если игра есть и false иначе
      */
     public boolean containsGame(Game game) {
-        for (int i = 1; i < games.size(); i++) {
-            if (games.get(i - 1).equals(game)) {
+        for (int i = 0; i < games.size(); i++) {
+            if (games.get(i).equals(game)) {
                 return true;
             }
         }
@@ -44,10 +58,12 @@ public class GameStore {
      * суммироваться с прошлым значением для этого игрока
      */
     public void addPlayTime(String playerName, int hours) {
-        if (playedTime.containsKey(playerName)) {
-            playedTime.put(playerName, playedTime.get(playerName));
-        } else {
-            playedTime.put(playerName, hours);
+        if (hours > 0) {
+            if (playedTime.containsKey(playerName)) {
+                playedTime.put(playerName, playedTime.get(playerName) + hours);
+            } else {
+                playedTime.put(playerName, hours);
+            }
         }
     }
 
@@ -73,6 +89,10 @@ public class GameStore {
      * за играми этого каталога
      */
     public int getSumPlayedTime() {
-        return 0;
+        int sum = 0;
+        for (Integer o : playedTime.values()) {
+            sum += o;
+        }
+        return sum;
     }
 }
