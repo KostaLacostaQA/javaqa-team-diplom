@@ -5,6 +5,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class PlayerTest {
 
     @Test
@@ -34,7 +37,7 @@ public class PlayerTest {
         player.play(game1, 2);
 
         int expected = 5;
-        int actual = player.sumGenre(game.getGenre() + game1.getGenre());
+        int actual = player.sumGenre(game.getGenre());
         assertEquals(expected, actual);
     }
 
@@ -56,30 +59,28 @@ public class PlayerTest {
     @Test
     public void shoutThrowRuntimeExceptionIfNoGameTest() {
         GameStore store = new GameStore();
-//        Game game = store.publishGame("Нетология Баттл Онлайн", "Аркады");
+        Game game = store.publishGame("Нетология Баттл Онлайн", "Аркады");
 
         Player player = new Player("Petya");
-        player.play(game, 3);
 
-        expected = NotFoundException.class;
         Assertions.assertThrows(NotFoundException.class, () ->
-        {player.play("Нетология Баттл Онлайн", 3)});
+        {
+            player.play(game, 3);
+        });
     }
 
     @Test
     public void installGameTest() {
         GameStore store = new GameStore();
-        Game expectedGame = store.publishGame("Нетология Баттл Онлайн", "Аркады");
-
         Player player = new Player("Petya");
-        player.installGame(expectedGame);
-        Game actualGame = store.publishGame("Нетология Баттл Онлайн", "Аркады");
+        Game actualGame = new Game("Нетология Баттл Онлайн", "Аркады", store);
+        Game expectedGame = player.installGame(actualGame);
+
         assertEquals(expectedGame, actualGame);
 
         //Повторное добавление игры игроку
 
-        actualGame = store.publishGame("Нетология Баттл Онлайн", "Аркады");
-        player.installGame(actualGame);
+        actualGame = player.installGame(actualGame);
         expectedGame = null;
         assertEquals(expectedGame, actualGame);
     }
@@ -116,7 +117,32 @@ public class PlayerTest {
         assertEquals(expectedGenre, actualGenre);
     }
 
-    //отсутствует метод возврата о том в какую игру сколько часов было сыграно,
-    //невозможно выполнить тест
+    @Test
+    public void playedTimeTest() {
+        GameStore store = new GameStore();
+        Game game = store.publishGame("Нетология Баттл Онлайн", "Аркады");
+        Player player = new Player("Petya");
+        player.installGame(game);
+        int actualHours = player.play(game, 3);
+        int expectedHours = 3;
+        assertEquals(expectedHours, actualHours);
 
+        //Суммарное колличество часов
+
+        actualHours = player.play(game, 7);
+        expectedHours = 10;
+        assertEquals(expectedHours, actualHours);
+
+        // Отрицательные значения
+
+        actualHours = player.play(game, -1);
+        expectedHours = 10;
+        assertEquals(expectedHours, actualHours);
+
+        // Значение 0
+
+        actualHours = player.play(game, 0);
+        expectedHours = 10;
+        assertEquals(expectedHours, actualHours);
+    }
 }

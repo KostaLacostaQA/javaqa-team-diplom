@@ -13,6 +13,8 @@ public class Player {
      */
     private Map<Game, Integer> playedTime = new HashMap<>();
 
+
+
     public Player(String name) {
         this.name = name;
     }
