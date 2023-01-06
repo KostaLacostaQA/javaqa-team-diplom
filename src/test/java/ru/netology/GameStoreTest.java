@@ -72,10 +72,10 @@ public class GameStoreTest {
         actualHours = playedTime.get("Константин");
         assertEquals(expectedHours, actualHours);
 
+        store.addPlayTime("Константин", 0);
         expectedHours = 15;
         actualHours = playedTime.get("Константин");
         assertEquals(expectedHours, actualHours);
-        store.addPlayTime("Константин", 0);
     }
 
     //вывод имени игрока с наибольшим игровым временем
